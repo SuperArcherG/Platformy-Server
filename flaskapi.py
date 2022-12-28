@@ -1,15 +1,19 @@
+import socket
 from flask import Flask, flash, json, send_file, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os
 
-Prod = True
+Prod = False
 Port = 80
-DevPort = 80
+DevPort = 9999
+
+hostname = socket.gethostname()
+local_ip = socket.gethostbyname(hostname)
+
+print(local_ip)
 
 UPLOAD_FOLDER = 'levels/uploads/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'heic'}
-
-companies = [{"id": 1, "name": "Company One"}, {"id": 2, "name": "Company Two"}]
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'heic', 'mp4', 'mov', 'webm', 'mpg'}
 
 app = Flask(__name__)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
@@ -18,7 +22,7 @@ def allowed_file(filename):
  return '.' in filename and \
  filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -34,7 +38,7 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(request.url + "uploads?name=" + filename)
+            return redirect(request.url + "s?name=" + filename)
     return '''
     <!doctype html>
     <title>Upload new File</title>
@@ -81,6 +85,6 @@ def info():
 if __name__ == '__main__':
  if Prod:
   from waitress import serve
-  serve(app,host='192.168.0.123', port=Port)
+  serve(app,host=local_ip, port=Port)
  else:
-  app.run(host = '192.168.0.123', port=DevPort, debug=True)
+  app.run(host=local_ip, port=DevPort, debug=True)
