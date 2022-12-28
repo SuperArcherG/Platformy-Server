@@ -3,6 +3,8 @@ from werkzeug.utils import secure_filename
 import os
 
 Prod = True
+Port = 80
+DevPort = 80
 
 UPLOAD_FOLDER = 'levels/uploads/'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'heic'}
@@ -36,6 +38,7 @@ def upload_file():
     return '''
     <!doctype html>
     <title>Upload new File</title>
+    <b><u><h1>THIS IS A TEST SERVER</h1></u></b>
     <h1>Upload new File</h1>
     <form method=post enctype=multipart/form-data>
       <input type=file name=file>
@@ -43,8 +46,8 @@ def upload_file():
     </form>
     '''
 
-@app.route("/e")
-def hello():
+@app.route("/2")
+def root():
  return "<h1>This is the server for the test level select screen!</h1>"
 
 
@@ -78,6 +81,6 @@ def info():
 if __name__ == '__main__':
  if Prod:
   from waitress import serve
-  serve(app,host='192.168.0.123', port=80)
+  serve(app,host='192.168.0.123', port=Port)
  else:
-  app.Run(host = '192.168.0.123', port=80, debug=True)
+  app.run(host = '192.168.0.123', port=DevPort, debug=True)
