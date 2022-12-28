@@ -18,8 +18,13 @@ def favicon():
 
 @app.route("/cover", methods=['GET','POST'])
 def cover():
+ filename = request.args.get('id') + ".png"
+ return send_file('levels/cover/'+filename, mimetype='image/png')
+
+@app.route("/icon", methods=['GET','POST'])
+def icon():
  filename = request.args.get('id') + ".jpeg"
- return send_file('levels/cover/'+filename, mimetype='image/jpeg')
+ return send_file('levels/icon/'+filename, mimetype='image/jpeg')
 
 if __name__ == '__main__':
 
