@@ -1,8 +1,11 @@
+from contextlib import nullcontext
 from flask import Flask, flash, json, send_file, request, redirect, url_for
 from werkzeug.utils import secure_filename
+from waitress import serve
+from PIL import Image
 import os, socket
 
-Prod = True
+Prod = False
 Port = 80
 DevPort = 9999
 Ip = '192.168.0.123'
@@ -13,6 +16,7 @@ ICON_FOLDER = 'levels/icon/'
 DATA_FOLDER = 'levels/data/'
 INFO_FOLDER = 'levels/info/'
 USERS_FOLDER = 'levels/users/'
+OWNERS_FOLDER = 'levels/owners/'
 ALLOWED_EXTENSIONS = {'png', 'json'}
 
 app = Flask(__name__)
@@ -24,7 +28,13 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        id = "11" # generate next free ID
+        users = os.listdir(OWNERS_FOLDER)
+        largest = 0
+        for x in users:
+             x = x.split('.')[0]
+             if int(x) > largest:
+                 largest = int(x)
+        id = str(largest + 1) # generate next free ID
         cover = request.files['cover']
         if cover.filename == '':
             cover = open('DefaultCover.png')
@@ -33,21 +43,36 @@ def upload_file():
         username = str(request.form.get('username'))
         password = str(request.form.get('password'))
 
-        invalidSearch1 = 'data' not in request.files or 'cover' not in request.files or 'info' not in request.files
-        invalidSearch2 = cover.filename == '' or data.filename == '' or info.filename == '' or username == '' or password == ''
-        invalidSearch3 = not allowed_file(cover.filename) or not allowed_file(data.filename) or not allowed_file(info.filename)
-        invalidSearch4 = open(os.path.join(USERS_FOLDER, username+ ".txt")).read() != password
-        print(invalidSearch1)
-        print(invalidSearch2)
-        print(invalidSearch3)
-        print(invalidSearch4)
-        if invalidSearch1 or invalidSearch2 or invalidSearch3 or invalidSearch4:
+        #Check if the user exists
+        users = os.listdir(USERS_FOLDER)
+        found = False
+        for x in users:
+             if x == username + '.txt':
+                 found = True
+        if not found:
+            return "err000 User not found: \"" + username + "\"" #err000
+
+        MissingData = 'data' not in request.files or 'cover' not in request.files or 'info' not in request.files
+        MissingFiles = cover.filename == '' or data.filename == '' or info.filename == '' or username == '' or password == ''
+        InvalidFileType = not allowed_file(cover.filename) or not allowed_file(data.filename) or not allowed_file(info.filename)
+        InvalidLogin = open(os.path.join(USERS_FOLDER, username+ ".txt")).read() != password
+        if MissingData: return "err001 Misscommunication" #err001
+        if MissingFiles: return "err002 Missing Files" #err002
+        if InvalidFileType: return "err003 invalid file type" #err003
+        if InvalidLogin: return "err004 incorrect password for user \"" + username + "\"" #err004
+        if MissingData or MissingFiles or InvalidFileType or InvalidLogin:
             return open('error.html')
         else:
-            cover.save(os.path.join(COVER_FOLDER, id + '.' + cover.filename.split('.')[1]))
+            imagePath = COVER_FOLDER + id + '.' + cover.filename.split('.')[1]
+            cover.save(imagePath)
             info.save(os.path.join(INFO_FOLDER, id + '.' + info.filename.split('.')[1]))
             data.save(os.path.join(DATA_FOLDER, id + '.' + data.filename.split('.')[1]))
-            #store account information
+            owner = open(os.path.join(OWNERS_FOLDER, id + '.txt'), 'x') #store account information
+            owner.write(username)
+            #Compress cover as a jpeg file
+            img = Image.open(imagePath).convert('RGB')
+            img = img.resize((320,320))
+            img.save(os.path.join(ICON_FOLDER, id + ".jpeg"))
             return open('Success.html')
     return open('LevelUploadPage.html')
 
@@ -65,6 +90,28 @@ def register():
         return open('Success.html')
     return open('register.html')
 
+@app.route("/change_password", methods=['GET', 'POST'])
+def change_password():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        oldPassowrd = request.form.get('old')
+        newPassowrd = request.form.get('new')
+        #Check if the user exists
+        users = os.listdir(USERS_FOLDER)
+        found = False
+        for x in users:
+             if x == username + '.txt':
+                 found = True
+        if not found:
+            return "err000 User not found: \"" + username + "\"" #err000
+        ValidLogin = open(os.path.join(USERS_FOLDER, username+ ".txt")).read() == oldPassowrd
+        if not ValidLogin: return "err004 incorrect password for user \"" + username + "\"" #err004
+        if ValidLogin:
+            os.remove(os.path.join(USERS_FOLDER, username + ".txt"))
+            user = open(os.path.join(USERS_FOLDER, str(username)) + '.txt', 'x')
+            user.write(str(newPassowrd))
+            return open('Success.html') 
+    return open('change_password.html')
 @app.route("/favicon.ico")
 def favicon():
  fav = open("favicon.ico")
@@ -94,7 +141,6 @@ def info():
 
 if __name__ == '__main__':
  if Prod:
-  from waitress import serve
   serve(app,host=Ip, port=Port)
  else:
   app.run(host=DevIP, port=DevPort, debug=True)
