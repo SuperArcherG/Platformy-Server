@@ -38,9 +38,9 @@ def upload_file():
 
     return open('LevelUploadPage.html')
 
-@app.route("/2")
+@app.route("/")
 def root():
- return "<h1>This is the server for the test level select screen!</h1>"
+ return "<h1>Thank you for your help testing!</h1>"
 
 
 @app.route("/favicon.ico")
