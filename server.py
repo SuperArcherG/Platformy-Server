@@ -39,16 +39,8 @@ def upload_file():
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(request.url + "s?name=" + filename)
-    return '''
-    <!doctype html>
-    <title>Upload new File</title>
-    <b><u><h1>THIS IS A TEST SERVER</h1></u></b>
-    <h1>Upload new File</h1>
-    <form method=post enctype=multipart/form-data>
-      <input type=file name=file>
-      <input type=submit value=Upload>
-    </form>
-    '''
+
+    return open('LevelUploadPage.html')
 
 @app.route("/2")
 def root():
