@@ -13,4 +13,3 @@ Delete(ICON_FOLDER)
 Delete(DATA_FOLDER)
 Delete(INFO_FOLDER)
 Delete(OWNERS_FOLDER)
-
