@@ -1,16 +1,12 @@
-import socket
 from flask import Flask, flash, json, send_file, request, redirect, url_for
 from werkzeug.utils import secure_filename
-import os
+import os, socket
 
-Prod = False
+Prod = True
 Port = 80
 DevPort = 9999
-
-hostname = socket.gethostname()
-local_ip = socket.gethostbyname(hostname)
-
-print(local_ip)
+IP = "192.168.0.123"
+DevIP = "192.168.0.124"
 
 UPLOAD_FOLDER = 'levels/uploads/'
 ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'heic', 'mp4', 'mov', 'webm', 'mpg'}
@@ -77,6 +73,6 @@ def info():
 if __name__ == '__main__':
  if Prod:
   from waitress import serve
-  serve(app,host=local_ip, port=Port)
+  serve(app,host=IP, port=Port)
  else:
-  app.run(host=local_ip, port=DevPort, debug=True)
+  app.run(host=DevIP, port=DevPort, debug=True)
