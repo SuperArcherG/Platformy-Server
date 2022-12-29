@@ -2,17 +2,20 @@ from flask import Flask, flash, json, send_file, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os, socket
 
-Prod = True
+Prod = False
 Port = 80
 DevPort = 9999
-IP = "192.168.0.123"
-DevIP = "192.168.0.124"
+Ip = '192.168.0.123'
+DevIP = '192.168.0.124'
 
-UPLOAD_FOLDER = 'levels/uploads/'
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'heic', 'mp4', 'mov', 'webm', 'mpg'}
+COVER_FOLDER = 'levels/cover/'
+ICON_FOLDER = 'levels/icon/'
+DATA_FOLDER = 'levels/data/'
+INFO_FOLDER = 'levels/info/'
+USERS_FOLDER = 'levels/users/'
+ALLOWED_EXTENSIONS = {'png', 'json'}
 
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def allowed_file(filename):
  return '.' in filename and \
@@ -21,27 +24,46 @@ def allowed_file(filename):
 @app.route('/upload', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
-        file = request.files['file']
-        # If the user does not select a file, the browser submits an
-        # empty file without a filename.
-        if file.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(request.url + "s?name=" + filename)
+        id = "11" # generate next free ID
+        cover = request.files['cover']
+        if cover.filename == '':
+            cover = open('DefaultCover.png')
+        data = request.files['data']
+        info = request.files['info']
+        username = str(request.form.get('username'))
+        password = str(request.form.get('password'))
 
+        invalidSearch1 = 'data' not in request.files or 'cover' not in request.files or 'info' not in request.files
+        invalidSearch2 = cover.filename == '' or data.filename == '' or info.filename == '' or username == '' or password == ''
+        invalidSearch3 = not allowed_file(cover.filename) or not allowed_file(data.filename) or not allowed_file(info.filename)
+        invalidSearch4 = open(os.path.join(USERS_FOLDER, username+ ".txt")).read() != password
+        print(invalidSearch1)
+        print(invalidSearch2)
+        print(invalidSearch3)
+        print(invalidSearch4)
+        if invalidSearch1 or invalidSearch2 or invalidSearch3 or invalidSearch4:
+            return open('error.html')
+        else:
+            cover.save(os.path.join(COVER_FOLDER, id + '.' + cover.filename.split('.')[1]))
+            info.save(os.path.join(INFO_FOLDER, id + '.' + info.filename.split('.')[1]))
+            data.save(os.path.join(DATA_FOLDER, id + '.' + data.filename.split('.')[1]))
+            #store account information
+            return open('Success.html')
     return open('LevelUploadPage.html')
 
 @app.route("/")
 def root():
  return "<h1>Thank you for your help testing!</h1>"
 
+@app.route("/register", methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        user = open(os.path.join(USERS_FOLDER, str(username)) + '.txt', 'x')
+        user.write(str(password))
+        return open('Success.html')
+    return open('register.html')
 
 @app.route("/favicon.ico")
 def favicon():
@@ -73,6 +95,6 @@ def info():
 if __name__ == '__main__':
  if Prod:
   from waitress import serve
-  serve(app,host=IP, port=Port)
+  serve(app,host=Ip, port=Port)
  else:
   app.run(host=DevIP, port=DevPort, debug=True)
