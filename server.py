@@ -2,7 +2,7 @@ from flask import Flask, flash, json, send_file, request, redirect, url_for
 from werkzeug.utils import secure_filename
 import os, socket
 
-Prod = False
+Prod = True
 Port = 80
 DevPort = 9999
 Ip = '192.168.0.123'
