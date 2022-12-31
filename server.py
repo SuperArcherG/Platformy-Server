@@ -95,7 +95,7 @@ def root():
 
 
 @app.route("/assets")
-def root():
+def assets():
     return open(os.path.join("levels", "assets.zip"))
 
 
