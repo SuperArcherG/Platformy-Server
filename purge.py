@@ -5,11 +5,15 @@ DATA_FOLDER = 'levels/data/'
 INFO_FOLDER = 'levels/info/'
 OWNERS_FOLDER = 'levels/owners/'
 
+deleted = 0
 def Delete(FOLDER):
-    for x in os.listdir(FOLDER): os.remove(os.path.join(FOLDER,x))
+    for x in os.listdir(FOLDER): 
+        os.remove(os.path.join(FOLDER,x))
+        deleted = deleted + 1
 
 Delete(COVER_FOLDER)
 Delete(ICON_FOLDER)
 Delete(DATA_FOLDER)
 Delete(INFO_FOLDER)
 Delete(OWNERS_FOLDER)
+print("Deleted " + str(deleted) + " users.")

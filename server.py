@@ -5,7 +5,7 @@ from waitress import serve
 from PIL import Image
 import os, socket
 
-Prod = False
+Prod = True
 Port = 80
 DevPort = 9999
 Ip = '192.168.0.123'
