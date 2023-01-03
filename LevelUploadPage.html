@@ -1,17 +1,46 @@
 <!doctype html>
 <title>Upload level</title>
-<h1>Upload a level</h1>
-<form method=post enctype=multipart/form-data>
-  Cover
-  <input type=file name=cover>
-  <br>Data
-  <input type=file name=data>
-  <br>Info
-  <input type=file name=info>
-  <br>Username
-  <input type=text name=username>
-  <br>Password
-  <input type=password name=password>
-  <br>Save
-  <input type=submit value=Upload>
-</form>
+<body style="background-color: rgb(73, 73, 73);margin: 0px;">
+    <div id="Header" style="text-align: center; background-color:rgb(30, 255, 60); margin: 0px;">
+      <h1 style="text-align: center; padding:20px; color:rgb(202, 0, 0); margin:0">Upload a level</h1>
+    </div>
+    <div id="links" style="text-align: center; background-color:rgb(120, 120, 120); margin-top:0;">
+      <form method=post enctype=multipart/form-data style="margin: 0px;">
+        <h2 style="margin: 0;">
+          <div style="background-color: rgb(49, 49, 162); color:white">
+            <div id="upload" style="padding:5px">
+              Username:
+              <input type=text name=username>
+            </div>
+            <div id="upload" style="padding:5px">
+              Password:
+              <input type=password name=password>
+            </div>
+          </div>
+
+          <div style="background-color:maroon; color:white">
+            <div id="upload" style="padding:5px">
+              <br>Cover:
+              <input type=file name=cover>
+            </div>
+            <div id="upload" style="padding:5px">
+              <br>Data:
+              <input type=file name=data>
+            </div>
+            <div id="upload" style="padding:5px">
+              <br>Info:
+              <input type=file name=info>
+            </div>
+            <br>
+          </div>
+
+          <div style="background-color: green;">
+            <div id="upload" style="padding-bottom:5px">
+              <input type=submit value=Upload>
+            </div>
+         </div>
+
+       </h2>
+    </form>
+  </div>
+</body>

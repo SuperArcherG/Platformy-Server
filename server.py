@@ -1,14 +1,14 @@
-from contextlib import nullcontext
-from flask import Flask, flash, json, send_file, request, redirect, url_for
-from werkzeug.utils import secure_filename
-from waitress import serve
-from PIL import Image
-import os
 import socket
+import os
+from PIL import Image
+from waitress import serve
+from werkzeug.utils import secure_filename
+from flask import Flask, flash, json, send_file, request, redirect, url_for
+from contextlib import nullcontext
 
 Prod = True
 Port = 80
-DevPort = 9999
+DevPort = 80
 Ip = '192.168.0.123'
 DevIP = '192.168.0.124'
 
@@ -17,6 +17,7 @@ ICON_FOLDER = 'levels/icon/'
 DATA_FOLDER = 'levels/data/'
 INFO_FOLDER = 'levels/info/'
 USERS_FOLDER = 'levels/users/'
+OWNS_FOLDER = 'levels/owns/'
 OWNERS_FOLDER = 'levels/owners/'
 ALLOWED_EXTENSIONS = {'png', 'json'}
 
@@ -85,13 +86,15 @@ def upload_file():
             img = Image.open(imagePath).convert('RGB')
             img = img.resize((320, 320))
             img.save(os.path.join(ICON_FOLDER, id + ".jpeg"))
+            user = open(os.path.join(OWNS_FOLDER, str(username)) + '.txt', 'a')
+            user.write(id + "\n")
             return open('Success.html')
     return open('LevelUploadPage.html')
 
 
 @app.route("/")
 def root():
-    return "<h1>Thank you for your help testing!</h1>"
+    return open("index.html")
 
 
 @app.route("/assets")
@@ -106,6 +109,7 @@ def register():
         password = request.form.get('password')
         user = open(os.path.join(USERS_FOLDER, str(username)) + '.txt', 'x')
         user.write(str(password))
+        user = open(os.path.join(OWNS_FOLDER, str(username)) + '.txt', 'x')
         return open('Success.html')
     return open('register.html')
 
@@ -137,31 +141,90 @@ def change_password():
     return open('change_password.html')
 
 
-@app.route("/favicon.ico")
+@app.route("/delete_user", methods=['GET', 'POST'])
+def deleteUser():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        # Check if the user exists
+        users = os.listdir(USERS_FOLDER)
+        found = False
+
+        # Check for user
+        for x in users:
+            if x == username + '.txt':
+                found = True
+        if not found:
+            return "err000 User not found: \"" + username + "\""  # err000
+
+        # Check password
+        ValidLogin = open(os.path.join(
+            USERS_FOLDER, username + ".txt")).read() == password
+        if not ValidLogin:
+            return "err004 incorrect password for user \"" + username + "\""  # err004
+
+        # delete data
+        if ValidLogin:
+            os.remove(os.path.join(USERS_FOLDER, username + ".txt"))
+            return open('Success.html')
+    return open("delete_user.html")
+
+
+@ app.route("/favicon.ico")
 def favicon():
     fav = open("favicon.ico")
     return send_file("favicon.ico", mimetype='image/ico')
 
 
-@app.route("/cover", methods=['GET', 'POST'])
+@app.route("/owns")
+def owns():
+    filename = request.args.get('usr') + ".txt"
+    return send_file(OWNS_FOLDER + filename)
+
+
+@app.route("/owner")
+def owner():
+    filename = request.args.get('id') + ".txt"
+    # return 0
+    return send_file(OWNERS_FOLDER + filename)
+
+
+@app.route("/users")
+def users():
+    return str(os.listdir(USERS_FOLDER)).replace(".txt", "")
+
+
+# @app.route("/user")
+# def user2():
+#     return user()
+
+
+@app.route("/user")
+def uses():
+    username = request.args.get('usr')
+    return str(username)
+    # ADD MORE INFO
+
+
+@ app.route("/cover", methods=['GET', 'POST'])
 def cover():
     filename = request.args.get('id') + ".png"
-    return send_file('levels/cover/'+filename, mimetype='image/png')
+    return send_file(COVER_FOLDER+filename, mimetype='image/png')
 
 
-@app.route("/icon", methods=['GET', 'POST'])
+@ app.route("/icon", methods=['GET', 'POST'])
 def icon():
     filename = request.args.get('id') + ".jpeg"
     return send_file('levels/icon/' + filename, mimetype='image/jpeg')
 
 
-@app.route("/uploads", methods=['GET', 'POST'])
+@ app.route("/uploads", methods=['GET', 'POST'])
 def uploads():
     filename = request.args.get('name')
     return send_file('levels/uploads/' + filename)
 
 
-@app.route("/info", methods=['GET', 'POST'])
+@ app.route("/info", methods=['GET', 'POST'])
 def info():
     filename = request.args.get('id') + ".json"
     return send_file("levels/info/" + filename)
