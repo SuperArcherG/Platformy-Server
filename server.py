@@ -96,7 +96,7 @@ def root():
 
 @app.route("/assets")
 def assets():
-    return open(os.path.join("levels", "assets.zip"))
+    return send_file(os.path.join("levels", "assets.zip"))
 
 
 @app.route("/register", methods=['GET', 'POST'])
