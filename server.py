@@ -229,6 +229,10 @@ def info():
     filename = request.args.get('id') + ".json"
     return send_file("levels/info/" + filename)
 
+@ app.route("/data")
+def data:
+    filename = request.args.get('id') + .json
+    return send_file("levels/data/" + filename)
 
 if __name__ == '__main__':
     if Prod:
