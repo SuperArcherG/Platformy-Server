@@ -206,7 +206,7 @@ def uses():
     # ADD MORE INFO
 
 
-@ app.route("/cover", methods=['GET', 'POST'])
+@app.route("/cover", methods=['GET', 'POST'])
 def cover():
     filename = request.args.get('id') + ".png"
     return send_file(COVER_FOLDER+filename, mimetype='image/png')
@@ -218,10 +218,10 @@ def icon():
     return send_file('levels/icon/' + filename, mimetype='image/jpeg')
 
 
-@ app.route("/uploads", methods=['GET', 'POST'])
-def uploads():
-    filename = request.args.get('name')
-    return send_file('levels/uploads/' + filename)
+# @ app.route("/uploads", methods=['GET', 'POST'])
+# def uploads():
+#     filename = request.args.get('name')
+#     return send_file('levels/uploads/' + filename)
 
 
 @ app.route("/info", methods=['GET', 'POST'])
