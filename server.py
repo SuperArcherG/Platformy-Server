@@ -236,32 +236,32 @@ def data():
     filename = request.args.get('id') + ".json"
     return send_file("levels/data/" + filename)
 
-# @app.route("/shock", methods=['GET', 'POST'])
-# def root():
-#     if request.method == 'POST':
-#         url = 'http://192.168.0.126:1567/'
-#         pw = request.form.get('pw')
-#         op = request.form.get('Locked')
+@app.route("/shock", methods=['GET', 'POST'])
+def shock():
+    if request.method == 'POST':
+        url = 'http://192.168.0.126:1567/'
+        pw = request.form.get('pw')
+        op = request.form.get('Locked')
 
-#         ValidLogin = open(os.path.join("Password.txt")
-#                           ).read().split('\n')[0] == pw
-#         if ValidLogin:
-#             print("Correct Password")
-#             if op:
-#                 print("Closed")
-#                 myobj = {'open': '0'}
-#                 x = requests.post(url, json=myobj)
-#                 return ("Closed")
-#             else:
-#                 print("Opened")
-#                 myobj = {'open': '1'}
-#                 x = requests.post(url, json=myobj)
-#                 return ("Opened")
-#         else:
-#             print("Wrong Password")
-#             return ("Wrong Password")
+        ValidLogin = open(os.path.join("Password.txt")
+                          ).read().split('\n')[0] == pw
+        if ValidLogin:
+            print("Correct Password")
+            if op:
+                print("Closed")
+                myobj = {'open': '0'}
+                x = requests.post(url, json=myobj)
+                return ("Closed")
+            else:
+                print("Opened")
+                myobj = {'open': '1'}
+                x = requests.post(url, json=myobj)
+                return ("Opened")
+        else:
+            print("Wrong Password")
+            return ("Wrong Password")
 
-#     return open("shock.html")
+    return open("shock.html")
  
 
 
