@@ -239,7 +239,7 @@ def data():
 @app.route("/shock", methods=['GET', 'POST'])
 def shock():
     if request.method == 'POST':
-        url = 'http://192.168.0.126:1567/'
+        url = 'http://192.168.0.126:1567/shock'
         pw = request.form.get('pw')
         op = request.form.get('Locked')
 
