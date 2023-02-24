@@ -190,6 +190,28 @@ def owner():
     return send_file(OWNERS_FOLDER + filename)
 
 
+@app.route("/shock")
+def SmallShock():
+    import requests
+
+    headers = {
+        'Content-Type': 'application/json',
+    }
+
+    json_data = {
+        'Username': 'SomeHornyWah',
+        'Name': 'Bot Test',
+        'Code': '25FB1A4DDF0',
+        'Duration': '1',
+        'Apikey': '0eaa2827-390f-4d6e-901e-a3ffc559c567',
+        'Op': '0',
+        'Intensity': '25',
+    }
+
+    response = requests.post(
+        'https://do.pishock.com/api/apioperate', headers=headers, json=json_data)
+
+
 @app.route("/users")
 def users():
     return str(os.listdir(USERS_FOLDER)).replace(".txt", "")
@@ -237,7 +259,7 @@ def data():
     return send_file("levels/data/" + filename)
 
 
-@app.route("/shock", methods=['GET', 'POST'])
+@app.route("/shock2", methods=['GET', 'POST'])
 def shock():
     if request.method == 'POST':
         url = 'http://192.168.0.126:1567/'
@@ -262,7 +284,7 @@ def shock():
             print("Wrong Password")
             return ("Wrong Password")
 
-    return open("shock.html")
+    return open("lock.html")
 
 
 if __name__ == '__main__':
