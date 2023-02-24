@@ -211,8 +211,10 @@ def SmallShock():
     response = requests.post(
         'https://do.pishock.com/api/apioperate', headers=headers, json=json_data)
 
+    return ("Shocked!")
 
-@app.route("/users")
+
+@ app.route("/users")
 def users():
     return str(os.listdir(USERS_FOLDER)).replace(".txt", "")
 
@@ -222,14 +224,14 @@ def users():
 #     return user()
 
 
-@app.route("/user")
+@ app.route("/user")
 def uses():
     username = request.args.get('usr')
     return str(username)
     # ADD MORE INFO
 
 
-@app.route("/cover", methods=['GET', 'POST'])
+@ app.route("/cover", methods=['GET', 'POST'])
 def cover():
     filename = request.args.get('id') + ".png"
     return send_file(COVER_FOLDER+filename, mimetype='image/png')
@@ -259,7 +261,7 @@ def data():
     return send_file("levels/data/" + filename)
 
 
-@app.route("/shock2", methods=['GET', 'POST'])
+@ app.route("/shock2", methods=['GET', 'POST'])
 def shock():
     if request.method == 'POST':
         url = 'http://192.168.0.126:1567/'
