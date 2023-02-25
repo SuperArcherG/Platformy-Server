@@ -204,7 +204,7 @@ def SmallShock():
         'Code': '25FB1A4DDF0',
         'Duration': '1',
         'Apikey': '0eaa2827-390f-4d6e-901e-a3ffc559c567',
-        'Op': '0',
+        'Op': '1',
         'Intensity': '25',
     }
 
