@@ -190,28 +190,28 @@ def owner():
     return send_file(OWNERS_FOLDER + filename)
 
 
-@app.route("/shock")
-def SmallShock():
-    import requests
+# @app.route("/shock")
+# def SmallShock():
+#     import requests
 
-    headers = {
-        'Content-Type': 'application/json',
-    }
+#     headers = {
+#         'Content-Type': 'application/json',
+#     }
 
-    json_data = {
-        'Username': 'SomeHornyWah',
-        'Name': 'Bot Test',
-        'Code': '25FB1A4DDF0',
-        'Duration': '1',
-        'Apikey': '0eaa2827-390f-4d6e-901e-a3ffc559c567',
-        'Op': '1',
-        'Intensity': '25',
-    }
+#     json_data = {
+#         'Username': 'SomeHornyWah',
+#         'Name': 'Bot Test',
+#         'Code': '25FB1A4DDF0',
+#         'Duration': '1',
+#         'Apikey': '0eaa2827-390f-4d6e-901e-a3ffc559c567',
+#         'Op': '1',
+#         'Intensity': '25',
+#     }
 
-    response = requests.post(
-        'https://do.pishock.com/api/apioperate', headers=headers, json=json_data)
+#     response = requests.post(
+#         'https://do.pishock.com/api/apioperate', headers=headers, json=json_data)
 
-    return ("Shocked!")
+#     return ("Shocked!")
 
 
 @ app.route("/users")
@@ -261,32 +261,32 @@ def data():
     return send_file("levels/data/" + filename)
 
 
-@ app.route("/shock2", methods=['GET', 'POST'])
-def shock():
-    if request.method == 'POST':
-        url = 'http://192.168.0.126:1567/'
-        pw = request.form.get('pw')
-        op = request.form.get('Locked')
+# @ app.route("/shock2", methods=['GET', 'POST'])
+# def shock():
+#     if request.method == 'POST':
+#         url = 'http://192.168.0.126:1567/'
+#         pw = request.form.get('pw')
+#         op = request.form.get('Locked')
 
-        ValidLogin = open(os.path.join("Password.txt")
-                          ).read().split('\n')[0] == pw
-        if ValidLogin:
-            print("Correct Password")
-            if op:
-                print("Closed")
-                myobj = {'open': '0'}
-                x = requests.post(url, json=myobj)
-                # return ("Closed")
-            else:
-                print("Opened")
-                myobj = {'open': '1'}
-                x = requests.post(url, json=myobj)
-                # return ("Opened")
-        else:
-            print("Wrong Password")
-            return ("Wrong Password")
+#         ValidLogin = open(os.path.join("Password.txt")
+#                           ).read().split('\n')[0] == pw
+#         if ValidLogin:
+#             print("Correct Password")
+#             if op:
+#                 print("Closed")
+#                 myobj = {'open': '0'}
+#                 x = requests.post(url, json=myobj)
+#                 # return ("Closed")
+#             else:
+#                 print("Opened")
+#                 myobj = {'open': '1'}
+#                 x = requests.post(url, json=myobj)
+#                 # return ("Opened")
+#         else:
+#             print("Wrong Password")
+#             return ("Wrong Password")
 
-    return open("lock.html")
+#     return open("lock.html")
 
 
 if __name__ == '__main__':
