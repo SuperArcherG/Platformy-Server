@@ -24,7 +24,7 @@ def get_local_ip():
 local_ip = get_local_ip()
 
 if local_ip:
-    #print(f"Local IP address: {local_ip}")
+    print(f"Local IP address: {local_ip}")
 else:
     print("Failed to retrieve the local IP address.")
 
