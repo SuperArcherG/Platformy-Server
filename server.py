@@ -16,12 +16,13 @@ def get_local_ip():
         local_ip = s.getsockname()[0]
         s.close()
         return local_ip
-    except Exception as e:
-        print(f"An error occurred while getting the local IP: {e}")
+    except:
+        print("ERROR")
         return None
 
 # Get and print the local IP address
 local_ip = get_local_ip()
+
 if local_ip:
     print(f"Local IP address: {local_ip}")
 else:
