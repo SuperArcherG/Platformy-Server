@@ -7,11 +7,32 @@ from flask import Flask, flash, json, send_file, request, redirect, url_for
 from contextlib import nullcontext
 import requests
 
-Prod = True
+
+def get_local_ip():
+    try:
+        # Create a socket connection to an external server (doesn't actually connect)
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))  # Use a known external server (Google's public DNS server)
+        local_ip = s.getsockname()[0]
+        s.close()
+        return local_ip
+    except Exception as e:
+        print(f"An error occurred while getting the local IP: {e}")
+        return None
+
+# Get and print the local IP address
+local_ip = get_local_ip()
+if local_ip:
+    print(f"Local IP address: {local_ip}")
+else:
+    print("Failed to retrieve the local IP address.")
+
+
+Prod = False
 Port = 80
-DevPort = 80
+DevPort = 6050
 Ip = "192.168.0.123"
-DevIP = "192.168.0.124"
+DevIP = str(local_ip)
 
 COVER_FOLDER = "levels/cover/"
 ICON_FOLDER = "levels/icon/"
