@@ -29,10 +29,10 @@ else:
     print("Failed to retrieve the local IP address.")
 
 
-Prod = True
-Port = 6050
+Prod = False
+Port = 80
 DevPort = 6050
-Ip = str(local_ip)
+Ip = "192.168.0.123:80"
 DevIP = str(local_ip)
 
 COVER_FOLDER = "levels/cover/"
@@ -326,7 +326,6 @@ def data():
 
 if __name__ == "__main__":
     if Prod:
-        
         serve(app, host=Ip, port=Port)
     else:
         app.run(host=DevIP, port=DevPort, debug=True)
