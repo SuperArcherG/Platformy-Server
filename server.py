@@ -31,8 +31,8 @@ else:
 
 Prod = False
 Port = 80
-DevPort = 6050
-Ip = "192.168.0.123:80"
+DevPort = 80
+Ip = str(local_ip)
 DevIP = str(local_ip)
 
 COVER_FOLDER = "levels/cover/"
