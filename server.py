@@ -29,7 +29,7 @@ else:
     print("Failed to retrieve the local IP address.")
 
 
-Prod = False
+Prod = True
 Port = 80
 DevPort = 80
 Ip = str(local_ip)
