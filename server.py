@@ -30,8 +30,8 @@ else:
 
 
 Prod = True
-Port = 80
-DevPort = 80
+Port = 81
+DevPort = 81
 Ip = str(local_ip)
 DevIP = str(local_ip)
 
